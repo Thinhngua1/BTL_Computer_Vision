@@ -1,0 +1,239 @@
+<mxfile host="65bd71144e">
+    <diagram name="1-System-Architecture" id="sys1">
+        <mxGraphModel dx="1000" dy="650" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="sys_title" value="1. SYSTEM &amp; HARDWARE ARCHITECTURE (YOLO VISION SORTING SYSTEM)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;fontColor=#1A365D;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="20" width="700" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_vision_grp" value="VISION SUBSYSTEM (Quoc)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E7;strokeColor=#D6B656;dashed=1;verticalAlign=top;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="620" y="80" width="420" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_cam" value="Industrial / USB Camera&lt;br&gt;(Capture Cylinder Workpiece)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="860" y="140" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_yolo" value="Vision Engine (YOLO)&lt;br&gt;- Object Detection&lt;br&gt;- Color Classification&lt;br&gt;(Black / Blue / White)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="640" y="140" width="170" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_e_cam" value="USB / Frame" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="sys_cam" target="sys_yolo">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_pc_grp" value="PC CONTROL STATION (Thinh)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBF8FF;strokeColor=#6C8EBF;dashed=1;verticalAlign=top;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="80" width="380" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_pc" value="PC Controller (C# WinForms MVVM)&lt;br&gt;- HMI &amp; Vision Bounding Box Display&lt;br&gt;- Simulation &amp; Manual Control&lt;br&gt;- Modbus RTU Master Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="130" width="300" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_e_vision_pc" value="TCP Socket / VisionService&lt;br&gt;(Frame, BBox, Color: Black/Blue/White)" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=classic;endArrow=classic;strokeWidth=2;strokeColor=#B85450;" edge="1" parent="1" source="sys_pc" target="sys_yolo">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_plc" value="PLC Xinje XD2-16T-E (Modbus RTU Slave - ID: 1)&lt;br&gt;- Coils: M0 (Start), M1 (Stop), M10 (Black), M11 (Blue), M12 (White)&lt;br&gt;- Outputs: Y0 (Conveyor), Y1 (Cylinder 1 - Black), Y2 (Cylinder 2 - Blue)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="130" y="360" width="440" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_e_modbus" value="RS485 Physical (A/B)&lt;br&gt;Modbus RTU (19200, 8, E, 1)&lt;br&gt;FC05 (Write Coil M) / FC01 (Read Coil Y)" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=classic;endArrow=classic;strokeWidth=2;strokeColor=#9673A6;" edge="1" parent="1" source="sys_pc" target="sys_plc">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_sensor" value="Sensors (Digital Inputs)&lt;br&gt;- X0: Workpiece Trigger Sensor&lt;br&gt;(Optional Hardware Trigger)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="540" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_act" value="Actuators (Digital Outputs)&lt;br&gt;- Y0: Conveyor Motor (M0 Latch)&lt;br&gt;- Y1: Cylinder 1 (M10 - Black)&lt;br&gt;- Y2: Cylinder 2 (M11 - Blue)&lt;br&gt;(*White M12 passes to end bin)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="360" y="530" width="260" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_e_in" value="24VDC Input (X0)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;strokeColor=#82B366;" edge="1" parent="1" source="sys_sensor" target="sys_plc">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_e_out" value="24VDC Transistor Output (Y0, Y1, Y2)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;strokeColor=#B85450;" edge="1" parent="1" source="sys_plc" target="sys_act">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="2-CSharp-MVVM" id="mvvm2">
+        <mxGraphModel dx="1100" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="mvvm_title" value="2. C# WINFORMS MVVM ARCHITECTURE &amp; WIRING RULES" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;fontColor=#1A365D;" vertex="1" parent="1">
+                    <mxGeometry x="220" y="15" width="660" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_wire" value="Program.cs&#xa;&#xa;(100% WIRING ONLY:&#xa;- Instantiate Services&#xa;- Instantiate Models&#xa;- Inject into MainVM&#xa;- Subscribe C# Events&#xa;- Bind MainForm)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;verticalAlign=middle;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="20" y="60" width="130" height="540" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_bv" value="VIEW LAYER (WinForms UI - No Business Logic)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="170" y="60" width="900" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_view_ctrl" value="MainForm : Conveyor &amp; PLC Control Panel&lt;br&gt;(COM Port, Start M0, Stop M1, Sim Black M10 / Blue M11 / White M12, Status Y0/Y1/Y2)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="190" y="95" width="440" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_view_vis" value="MainForm : Vision Panel (Reserved for Quoc)&lt;br&gt;(PictureBox Camera/BBox, Detected Color Badge, Confidence, Counters)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="650" y="95" width="400" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_bvm" value="VIEWMODEL LAYER (Presentation Logic &amp; Coordination)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="170" y="230" width="900" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_vm" value="MainViewModel&lt;br&gt;- Commands: ConnectPlc(), StartConveyor(), StopConveyor(), TriggerColor(Black/Blue/White), ResetSort()&lt;br&gt;- Events (Bottom-Up to View): OnPlcStateChanged, OnVisionResultReceived, OnLogAdded" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="250" y="265" width="740" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_bms" value="MODEL &amp; SERVICE LAYER (Bottom Tier - Hardware, Vision &amp; Domain State)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="170" y="410" width="900" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_pm" value="PlcStateModel&lt;br&gt;- M0, M1, M10, M11, M12&lt;br&gt;- Y0, Y1, Y2&lt;br&gt;- Counters (Black/Blue/White)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="190" y="445" width="210" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_ms" value="ModbusRtuService&lt;br&gt;- SerialPort RS485 (CRC16)&lt;br&gt;- WriteSingleCoil (FC05)&lt;br&gt;- ReadCoils (FC01)&lt;br&gt;- Event: OnPlcPolled / OnError" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="430" y="445" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_vs" value="VisionService (Hook for Quoc)&lt;br&gt;- Receive Frame + BBox + Color&lt;br&gt;- Simulator / TCP / Camera Hook&lt;br&gt;- Event: OnVisionFrameReady" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="740" y="445" width="310" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_plc_hw" value="PLC Xinje XD2-16T-E (RS485 A, B)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="460" y="570" width="220" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_yolo_hw" value="YOLO Detector / Camera Stream" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="785" y="570" width="220" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="m_util" value="Utils / Config:&#xa;PlcAddressMap.cs (M0=0, M1=1, M10=10, M11=11, M12=12, Y0=0x6000) | VisionDetectionResult.cs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="170" y="635" width="900" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_v_vm_down" value="Direct Call (Top-Down)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;strokeColor=#2B6CB0;exitX=0.35;exitY=1;entryX=0.2;entryY=0;" edge="1" parent="1" source="m_view_ctrl" target="m_vm">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_vm_v_up" value="C# Event / Action&lt;T&gt; (Bottom-Up)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;dashed=1;strokeWidth=2;strokeColor=#C53030;exitX=0.45;exitY=0;entryX=0.75;entryY=1;" edge="1" parent="1" source="m_vm" target="m_view_ctrl">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_vm_vvis_up" value="Event: OnVisionFrame / CounterUpdated" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;dashed=1;strokeWidth=2;strokeColor=#C53030;exitX=0.8;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="m_vm" target="m_view_vis">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_vm_pm" value="Direct Call: UpdateState()" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;strokeColor=#2B6CB0;exitX=0.15;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="m_vm" target="m_pm">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_vm_ms_down" value="Direct Call: WriteCoil()" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;strokeColor=#2B6CB0;exitX=0.42;exitY=1;entryX=0.35;entryY=0;" edge="1" parent="1" source="m_vm" target="m_ms">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_ms_vm_up" value="Event: OnStatePolled" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;dashed=1;strokeWidth=2;strokeColor=#C53030;exitX=0.7;exitY=0;entryX=0.55;entryY=1;" edge="1" parent="1" source="m_ms" target="m_vm">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_vs_vm_up" value="Event: OnColorDetected(Result)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;dashed=1;strokeWidth=2;strokeColor=#C53030;exitX=0.5;exitY=0;entryX=0.85;entryY=1;" edge="1" parent="1" source="m_vs" target="m_vm">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_ms_plc" value="Modbus RTU" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=classic;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="m_ms" target="m_plc_hw">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_vs_yolo" value="Frame &amp; BBox" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=classic;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="m_vs" target="m_yolo_hw">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="3-Vision-Sorting-Flowchart" id="flow3">
+        <mxGraphModel dx="1050" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="950" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="fl_title" value="3. VISION &amp; PLC SORTING ALGORITHM FLOWCHART (BLACK / BLUE / WHITE)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;fontColor=#1A365D;" vertex="1" parent="1">
+                    <mxGeometry x="150" y="20" width="650" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_start" value="Start System&lt;br&gt;(Connect Modbus RTU &amp; Start Conveyor M0 -&gt; Y0 = ON)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="330" y="65" width="280" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_roi" value="Workpiece enters&lt;br&gt;Camera ROI / Trigger?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="360" y="165" width="220" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_infer" value="Capture Frame &amp; Run YOLO Inference&lt;br&gt;(Detect Cylinder Bounding Box &amp; Color Class)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="330" y="290" width="280" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_conf" value="Valid Detection?&lt;br&gt;(Conf &gt;= Threshold)" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="360" y="385" width="220" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_ui" value="Emit Event to C# MainViewModel:&lt;br&gt;- Draw Bounding Box &amp; Color Label on UI&lt;br&gt;- Increment Color Counter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;" vertex="1" parent="1">
+                    <mxGeometry x="330" y="510" width="280" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_branch" value="Check Classified&lt;br&gt;Color Class?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="365" y="610" width="210" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_black" value="Color == BLACK&lt;br&gt;Modbus Write: M10 = ON&lt;br&gt;-&gt; PLC triggers Y1 (Cylinder 1)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6E6E6;strokeColor=#333333;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="740" width="230" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_blue" value="Color == BLUE&lt;br&gt;Modbus Write: M11 = ON&lt;br&gt;-&gt; PLC triggers Y2 (Cylinder 2)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="355" y="740" width="230" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_white" value="Color == WHITE (or Unknown)&lt;br&gt;Modbus Write: M12 = ON&lt;br&gt;-&gt; Y1=OFF, Y2=OFF (Pass straight)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#666666;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="630" y="740" width="240" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_reset" value="After Sorting Delay / Reset Command:&lt;br&gt;Reset Coils (M10=0, M11=0, M12=0) &amp; Wait Next Workpiece" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="310" y="865" width="320" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_e1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_start" target="fl_roi">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_e_roi_no" value="No (Keep scanning)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=1.5;" edge="1" parent="1" source="fl_roi">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="470" y="145" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="640" y="208"/>
+                            <mxPoint x="640" y="145"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fl_e_roi_yes" value="Yes" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_roi" target="fl_infer">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_e3" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_infer" target="fl_conf">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_e_conf_yes" value="Yes" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_conf" target="fl_ui">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_e_conf_no" value="No (Timeout / Unrecognized -&gt; Default pass)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;dashed=1;strokeColor=#B85450;strokeWidth=1.5;" edge="1" parent="1" source="fl_conf" target="fl_white">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="750" y="428"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fl_e5" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_ui" target="fl_branch">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_e_black" value="BLACK" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_branch" target="fl_black">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_e_blue" value="BLUE" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_branch" target="fl_blue">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_e_white" value="WHITE" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_branch" target="fl_white">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_e_r1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_black" target="fl_reset">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="195" y="840"/>
+                            <mxPoint x="470" y="840"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fl_e_r2" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_blue" target="fl_reset">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fl_e_r3" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;" edge="1" parent="1" source="fl_white" target="fl_reset">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="750" y="840"/>
+                            <mxPoint x="470" y="840"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fl_e_loop" value="Loop Next Cycle" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=classic;strokeWidth=2;strokeColor=#82B366;" edge="1" parent="1" source="fl_reset">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="470" y="145" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="470" y="955"/>
+                            <mxPoint x="40" y="955"/>
+                            <mxPoint x="40" y="145"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

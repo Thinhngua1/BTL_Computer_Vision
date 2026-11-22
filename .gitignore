@@ -1,0 +1,28 @@
+# Thư mục tham khảo
+ref/
+
+# Visual Studio & C# Build Cache
+.vs/
+**/[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.pdb
+
+# (Tùy chọn) Bỏ comment dòng dưới nếu KHÔNG muốn đẩy file .exe lên Git
+# **/[Bb]in/
+
+# Python & YOLO (Dành cho phần Vision của Quốc ghép vào ngày mai)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# File tạm của Microsoft Office (Word, PowerPoint) & Draw.io
+~$*.docx
+~$*.pptx
+~$*.xlsx
+*.drawio.bkp
+*.tmp
